@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "837289184884",
+    "project_id": "ieq-congresso-jovens",
+    "storage_bucket": "ieq-congresso-jovens.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837289184884:android:45cd31aafc1935eb838b21",
+        "android_client_info": {
+          "package_name": "com.dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837289184884-0ssvbv44mi9m5n9rorgln4v2k1dpijaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARy5tmHEXvjNtGawUrxp5RwQzyDugPiL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837289184884-0ssvbv44mi9m5n9rorgln4v2k1dpijaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
