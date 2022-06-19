@@ -1,5 +1,6 @@
 import React from 'react' 
 import { Foundation } from '@expo/vector-icons'; 
+import { TextInputProps } from 'react-native';
 
 import { 
     Input,
@@ -10,14 +11,19 @@ import {
     Container
 } from './styles'
 
-interface searchBarProps{
+interface searchBarProps extends TextInputProps{
     callDatabase: () => void;
 }
-export function SearchBar({ callDatabase }: searchBarProps){
+export function SearchBar({ callDatabase, onChangeText }: searchBarProps){
 
     return(
         <Container>
-            <Input placeholder="PESQUISAR" w="260px" maxWidth="300px" />
+            <Input 
+                placeholder="PESQUISAR" 
+                w="260px" 
+                maxWidth="300px" 
+                onChangeText={onChangeText}
+            />
             <Button 
                 onPress={callDatabase}
                 style={{

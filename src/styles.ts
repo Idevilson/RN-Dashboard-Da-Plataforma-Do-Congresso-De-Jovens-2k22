@@ -19,4 +19,3 @@ export const ChooseButton = styled.View`
     width: 300px;
     height: 30px;
 `;
-

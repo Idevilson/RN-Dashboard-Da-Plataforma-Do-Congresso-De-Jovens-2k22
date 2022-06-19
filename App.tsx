@@ -2,7 +2,7 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { Dashboard } from './src';
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler'; 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NativeBaseProvider } from "native-base";
 
 export default function App() {
