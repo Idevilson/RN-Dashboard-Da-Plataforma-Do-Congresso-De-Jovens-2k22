@@ -61,17 +61,20 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                             </Heading>
                             <Divider my="2" />
                             <Text 
-                                    fontSize="xs"
+                                    fontSize="15px"
                                     color={'black'}
                                     fontWeight="500" 
                                     ml="-0.5" 
                                     mt="-1"
                                     >
-                                Criado em: {String(Timestamp)}
+                                Criado em: {
+                                    (String(new Date(Timestamp).toLocaleDateString('pt-br'))) + ' às ' +
+                                    (String(new Date(Timestamp).toLocaleTimeString('pt-br')))
+                                }
                             </Text>
                             <Divider my="2" />
                             <Text 
-                                    fontSize="xs"
+                                    fontSize="15px"
                                     color={'black'}
                                     fontWeight="500" 
                                     ml="-0.5" 
@@ -81,7 +84,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                             </Text>
                             <Divider my="2" />
                             <Text 
-                                    fontSize="xs"
+                                    fontSize="15px"
                                     color={'black'}
                                     fontWeight="500" 
                                     ml="-0.5" 
@@ -91,7 +94,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                             </Text>
                             <Divider my="2" />
                             <Text 
-                                    fontSize="xs"
+                                    fontSize="15px"
                                     color={'black'}
                                     fontWeight="500" 
                                     ml="-0.5" 
@@ -105,7 +108,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                                     direction="row"
                                     >
                                     <Text 
-                                        fontSize="xs"
+                                        fontSize="15px"
                                         color={'black'}
                                         fontWeight="500" 
                                         ml="-0.5" 
@@ -117,7 +120,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                                         orientation="vertical"
                                         />
                                     <Text 
-                                        fontSize="xs"
+                                        fontSize="15px"
                                         color={'black'}
                                         fontWeight="500" 
                                         ml="-0.5" 
@@ -129,7 +132,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                                         orientation="vertical"
                                         />
                                     <Text 
-                                        fontSize="xs"
+                                        fontSize="15px"
                                         color={'black'}
                                         fontWeight="500" 
                                         ml="-0.5" 
@@ -140,7 +143,7 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
                                 </Stack>
                                 <Divider />
                                 <Text 
-                                    fontSize="xs"
+                                    fontSize="15px"
                                     color={'black'}
                                     fontWeight="500" 
                                     ml="-0.5" 

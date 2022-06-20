@@ -5,8 +5,8 @@ export const Container = styled.View`
     display: flex;
     flex-direction: row;
 
-    height: 40px;
-    width: 300px;
+    height: 45px;
+    width: 340px;
 `;
 
 export const Button = styled.TouchableOpacity`

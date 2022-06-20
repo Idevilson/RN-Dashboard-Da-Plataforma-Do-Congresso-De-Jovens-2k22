@@ -2,14 +2,13 @@ import React from 'react';
 
 import { 
     Modal, 
-    Button, 
     Center,
-    FlatList
+    Text,
+    ScrollView,
+    Button
 } from 'native-base';
 
 import { SubscriptionCard } from '../subscriptionCard';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 interface DataType{
     Timestamp: string,
     campo: string,
@@ -26,11 +25,12 @@ interface SearchResultModalProps{
     isOpen: boolean;
     onClose: () => void;
     onOpen: () => void;
-    data: DataType[];
+    data: DataType;
 }
 
 export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalProps){
    
+    console.log("renderizou");
     
     return (
         <Center>
@@ -40,49 +40,42 @@ export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalPr
             >
                 <Modal.Content
                     style={{
-                        height: '100%',
-                        width: '100%'
+                        height: '70%',
+                        width: '100%',
                     }}
                 >
-                    <Modal.CloseButton />
-                    <Modal.Header fontSize="4xl" fontWeight="bold">
-                        Delete Customer
+                    <Modal.Header alignItems="center">
+                      <Text fontSize="2xl" fontWeight="bold">GERENCIAR INSCRIÇÃO</Text>
                     </Modal.Header>
                     <Modal.Body>
                    
-                    <SafeAreaView style={{flex: 1}}>
-                        <FlatList
+                        <ScrollView
                             style={{ 
                                 width: "100%" ,
                                 height: "100%"
                             }}
                             showsHorizontalScrollIndicator
-                            data={data}
-                            keyExtractor={item => item.subscriptionCode}
-                            renderItem={({item}) => 
-                                <SubscriptionCard 
-                                    Timestamp={item.Timestamp}
-                                    campo={item.campo}
-                                    cidade={item.cidade}
-                                    cpf={item.cpf}
-                                    createdAt={item.createdAt}
-                                    idade={item.idade}
-                                    nome={item.nome}
-                                    pago={item.pago}
-                                    sexo={item.sexo}
-                                    subscriptionCode={item.subscriptionCode}
-                                />          
-                            }
-                        />
-                    </SafeAreaView>     
+                        >
+                            <SubscriptionCard 
+                                    Timestamp={data.Timestamp}
+                                    campo={data.campo}
+                                    cidade={data.cidade}
+                                    cpf={data.cpf}
+                                    createdAt={data.createdAt}
+                                    idade={data.idade}
+                                    nome={data.nome}
+                                    pago={data.pago}
+                                    sexo={data.sexo}
+                                    subscriptionCode={data.subscriptionCode}
+                            />       
+                        </ScrollView>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="unstyled" mr="1" onPress={() => onClose()}>
-                        Cancel
-                        </Button>
-                        <Button colorScheme="error" onPress={() => onClose()}>
-                        Delete
-                        </Button>
+                        <Button.Group space={2}>
+                            <Button onPress={onClose}>
+                                FECHAR
+                            </Button>
+                        </Button.Group>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal>

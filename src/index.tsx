@@ -11,7 +11,8 @@ import {
   Text,
   Select,
   CheckIcon,
-  Divider
+  Divider,
+  Spinner
 } from "native-base";
 
 import { 
@@ -30,19 +31,22 @@ import {
 import { SearchResultModal } from './components/modal';
 import { SearchBar } from './components/searchBar';
 
+
+
 export function Dashboard(){
     const [selected, setSelected] = useState("");
     const [inputValue, setInputValue] = useState("");
-    const [dataModal, setDataModal] = useState([]);
+    const [dataModal, setDataModal] = useState<any>([]);
+
+    const [subscriptionContent, setSubscriptionsContent] = useState<FirebaseFirestoreTypes.DocumentData>([]);
+    const [subscriptionPaidData, setSubscriptionPaidData] = useState<FirebaseFirestoreTypes.DocumentData>([]);
+    const [subscriptionNotPaidData, setSubscriptionNotPaidData] = useState<FirebaseFirestoreTypes.DocumentData>([]);
 
     const [subscriptionTotal, setSubscriptionTotal] = useState(0);
-    const [subscriptionContent, setSubscriptionsContent] = useState<FirebaseFirestoreTypes.DocumentData>([]);
-
-    const [subscriptionPaidData, setSubscriptionPaidData] = useState<FirebaseFirestoreTypes.DocumentData>([]);
+    const [totalSubscriptionNotPaid, setTotalSubcriptionNotPaid] = useState(0);
     const [totalSubscriptionPaid, setTotalSubscriptionPaid] = useState(0);
 
-    const [subscriptionNotPaidData, setSubscriptionNotPaidData] = useState<FirebaseFirestoreTypes.DocumentData>([]);
-    const [totalSubscriptionNotPaid, setTotalSubcriptionNotPaid] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const { onOpen, onClose, isOpen } = useDisclose();
     const toast = useToast();
@@ -104,13 +108,13 @@ export function Dashboard(){
             .get()
             .then(querySnapshot => {
               console.log('Total users: ', querySnapshot.size);
-              const data = [];
+              var data;
 
               querySnapshot.forEach(documentSnapshot => {
-                data.push(documentSnapshot.data());
+                data = documentSnapshot.data();
+                setDataModal(data);
               });
               
-              setDataModal(data);
               console.log(data);
               onOpen();
                   
@@ -119,24 +123,52 @@ export function Dashboard(){
     }
 
 
-    function test() {
-      console.log("funcionando");
+    async function LoadSubscriptionsFromFirestore() {
+      setLoading(true);
 
-      firestore()
+      await firestore()
       .collection('inscritos2k22')
       .get()
       .then(
         querySnapshot => {
-          console.log('Total users: ', querySnapshot.size);
-          const data = [];
+          setSubscriptionTotal(querySnapshot.size);
           
-    
-          console.log(data)
+          querySnapshot.forEach(documentSnapshop => {
+            setSubscriptionsContent(documentSnapshop.data());
+          })
         }
-      ).catch(error => console.log(error))
+      ).catch(error => console.log(error));
+
+      await firestore()
+      .collection('inscritos2k22')
+      .where('pago', '==', true)
+      .get()
+      .then(querySnapshot => {
+
+          setTotalSubscriptionPaid(querySnapshot.size);
+          querySnapshot.forEach(documenSnapshop => {
+            setSubscriptionNotPaidData(documenSnapshop.data());
+          });
+
+      });
+
+      await firestore()
+      .collection('inscritos2k22')
+      .where('pago', '==', false)
+      .get()
+      .then(querySnapshot => {
+
+          setTotalSubcriptionNotPaid(querySnapshot.size);
+          querySnapshot.forEach(documenSnapshop => {
+            setSubscriptionPaidData(documenSnapshop.data());
+          });
+          
+      });
+
+      setLoading(false);
     }
     useEffect(() => {
-       
+      LoadSubscriptionsFromFirestore();
     }, []);
 
     return(
@@ -147,13 +179,13 @@ export function Dashboard(){
             </Title>
   
                 <SearchBar 
-                    callDatabase={test}
+                    callDatabase={handleSearchSubscription}
                     onChangeText={(text) => (setInputValue(text))}
                 />
 
                 <Select   
                   selectedValue={selected}
-                  minWidth="300" 
+                  minWidth="340" 
                   accessibilityLabel="Escolha uma opção" 
                   placeholder="Escolha uma opção" 
                   _selectedItem={{
@@ -175,6 +207,7 @@ export function Dashboard(){
                 /> 
 
           </Content>
+          
           <ScrollContainer>
               <Box
                 alignItems="center"
@@ -183,13 +216,11 @@ export function Dashboard(){
                   Total de inscrições
                 </TitleTotal>
                 <TotalContainer>
-                  <Text>
-                      {String(subscriptionTotal)}
+                  <Text fontSize="6xl" color="white">
+                      {loading === true ? <Spinner size="lg" color="white"/> :subscriptionTotal}
                   </Text>
                 </TotalContainer>
               </Box>
-                
-              <Divider />
 
               <Box
                 alignItems="center"
@@ -198,15 +229,11 @@ export function Dashboard(){
                   Total de inscrições pagas
                 </TitleTotalPaid>
                 <TotalPaidContainer>
-                    <Text>
-                        {
-                          subscriptionPaidData === [] ? "0" : totalSubscriptionPaid
-                        }
+                    <Text fontSize="6xl" color="white">
+                        {loading === true ? <Spinner size="lg" color="white"/> : totalSubscriptionPaid}
                     </Text>
                 </TotalPaidContainer>
               </Box>
-
-              <Divider />
 
               <Box
                 alignItems="center"
@@ -215,10 +242,8 @@ export function Dashboard(){
                   Total de inscrições não pagas
                 </TitleTotalNotPaid>
                 <TotalNotPaidContainer>
-                    <Text>
-                        {
-                          subscriptionNotPaidData === [] ? "0" : totalSubscriptionNotPaid
-                        }
+                    <Text fontSize="6xl" color="white">
+                        {loading === true ? <Spinner size="lg" color="white"/> : totalSubscriptionNotPaid}
                     </Text>
                 </TotalNotPaidContainer>
               </Box>

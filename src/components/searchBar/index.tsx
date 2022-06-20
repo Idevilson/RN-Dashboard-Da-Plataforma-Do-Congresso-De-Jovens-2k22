@@ -20,7 +20,7 @@ export function SearchBar({ callDatabase, onChangeText }: searchBarProps){
         <Container>
             <Input 
                 placeholder="PESQUISAR" 
-                w="260px" 
+                width="300px" 
                 maxWidth="300px" 
                 onChangeText={onChangeText}
             />

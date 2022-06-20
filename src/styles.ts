@@ -33,11 +33,13 @@ export const TotalContainer = styled.View`
     background-color: #123291;
     border-radius: 3px;
     margin-bottom: 20px;
+
+    align-items: center;
+    justify-content: center;
 `;
 
 export const TitleTotal = styled.Text`
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 20px;
     color: #000;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -46,8 +48,7 @@ export const TitleTotal = styled.Text`
 `;
 
 export const TitleTotalPaid = styled.Text`
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 20px;
     color: #000;
 
     margin-top: 15px;
@@ -64,6 +65,9 @@ export const TotalPaidContainer = styled.View`
     background-color: green;
     border-radius: 3px;
     margin-bottom: 20px;
+
+    align-items: center;
+    justify-content: center;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -71,8 +75,7 @@ export const ScrollContainer = styled.ScrollView`
 `;
 
 export const TitleTotalNotPaid = styled.Text`
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 20px;
     color: #000;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -88,4 +91,7 @@ export const TotalNotPaidContainer = styled.View`
 
     margin-bottom: 20px;
     border-radius: 3px;
+
+    align-items: center;
+    justify-content: center;
 `;
