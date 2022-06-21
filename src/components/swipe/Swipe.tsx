@@ -1,4 +1,6 @@
 import React, { Component, PropsWithChildren } from 'react';
+import firestore from '@react-native-firebase/firestore';
+
 import {
   Animated,
   StyleSheet,
@@ -7,14 +9,85 @@ import {
   I18nManager,
   Alert,
 } from 'react-native';
-
 import { RectButton } from 'react-native-gesture-handler';
-
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { AntDesign } from '@expo/vector-icons';
 
-export default class AppleStyleSwipeableRow extends Component<
-  PropsWithChildren<unknown>
-> {
+
+async function subscriptionConfirmPayment(cpf: string, onClose){
+  let documentId = "";
+
+  await firestore()
+    .collection('inscritos2k22')
+    .where('cpf', '==', cpf)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        documentId = documentSnapshot.id;
+      });
+  });
+
+  await firestore()
+    .collection('inscritos2k22')
+    .doc(documentId)
+    .update({
+      pago: true,
+    })
+    .then(() => {
+      Alert.alert(
+        "PAGAMENTO APROVADO!",
+        "VOCÊ SERÁ REDIRECIONADO PARA A TELA INICIAL.",
+        [
+          {
+            text: "CONFIRMAR",
+            onPress: () => onClose(),
+            style: "cancel"
+          },
+        ]
+      );
+      console.log('Pagamento confirmado');
+    }).catch((error) => 
+      console.log(error)
+    )
+};
+
+async function subscriptionDelete(cpf: string, onClose){
+  let documentId = "";
+
+  await firestore()
+    .collection('inscritos2k22')
+    .where('cpf', '==', cpf)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(documentSnapshot => {
+        documentId = documentSnapshot.id;
+      });
+  });
+
+  await firestore()
+    .collection('inscritos2k22')
+    .doc(documentId)
+    .delete()
+    .then(() => {
+      Alert.alert(
+        "INSCRIÇÃO DELETADA!",
+        "VOCÊ SERÁ REDIRECIONADO PARA A TELA INICIAL.",
+        [
+          {
+            text: "CONFIRMAR",
+            onPress: () => onClose(),
+            style: "cancel"
+          },
+        ]
+      );
+      console.log('inscrição deletada');
+    }).catch((error) => 
+      console.log(error)
+    )
+};
+
+export default class AppleStyleSwipeableRow extends Component<{ cpf: string, onClose }, PropsWithChildren<unknown>>{
+
   private renderLeftActions = (
     _progress: Animated.AnimatedInterpolation,
     dragX: Animated.AnimatedInterpolation
@@ -24,8 +97,27 @@ export default class AppleStyleSwipeableRow extends Component<
       outputRange: [-20, 0, 0, 1],
       extrapolate: 'clamp',
     });
+
+    const pressHandler = () => {
+      Alert.alert(
+        "APROVAR PAGAMENTO",
+        "AO CLICAR EM CONFIRMAR O PAGAMENTO SERÁ CONFIRMADO",
+        [
+          {
+            text: "CANCELAR",
+            onPress: () => console.log("Exclusão cancelada")
+          },
+          {
+            text: "CONFIRMAR",
+            onPress: () => this.ConfirmPayment(),
+            style: "cancel"
+          },
+        ]
+      );
+    };
+
     return (
-      <RectButton style={styles.leftAction} onPress={this.close}>
+      <RectButton style={styles.leftAction} onPress={pressHandler}>
         <Animated.Text
           style={[
             styles.actionText,
@@ -33,7 +125,8 @@ export default class AppleStyleSwipeableRow extends Component<
               transform: [{ translateX: trans }],
             },
           ]}>
-          Aprovar pagamento
+          Aprovar pagamento 
+          <AntDesign name="check" size={50} color="black" />
         </Animated.Text>
       </RectButton>
     );
@@ -50,8 +143,21 @@ export default class AppleStyleSwipeableRow extends Component<
       outputRange: [x, 0],
     });
     const pressHandler = () => {
-      this.close();
-      Alert.alert(text);
+      Alert.alert(
+        "EXCLUIR INSCRIÇÃO",
+        "AO CLICAR EM CONFIRMAR A INSCRIÇÃO SERÁ APAGADA",
+        [
+          {
+            text: "CANCELAR",
+            onPress: () => console.log("Exclusão cancelada")
+          },
+          {
+            text: "CONFIRMAR",
+            onPress: () => this.DeleteSubscription(),
+            style: "cancel"
+          },
+        ]
+      );
     };
 
     return (
@@ -59,7 +165,7 @@ export default class AppleStyleSwipeableRow extends Component<
         <RectButton
           style={[styles.rightAction, { backgroundColor: color }]}
           onPress={pressHandler}>
-          <Text style={styles.actionText}>{text}</Text>
+          <Text style={styles.actionText}>{text}<AntDesign name="delete" size={50} color="black" /></Text>
         </RectButton>
       </Animated.View>
     );
@@ -77,15 +183,18 @@ export default class AppleStyleSwipeableRow extends Component<
       {this.renderRightAction('Excluir', '#dd2c00', 64, progress)}
     </View>
   );
-
   private swipeableRow?: Swipeable;
 
   private updateRef = (ref: Swipeable) => {
     this.swipeableRow = ref;
   };
-  private close = () => {
-    this.swipeableRow?.close();
+  private ConfirmPayment = () => {
+    subscriptionConfirmPayment(this.props.cpf, this.props.onClose);
+  };  
+  private DeleteSubscription = () => {
+    subscriptionDelete(this.props.cpf, this.props.onClose);
   };
+
   render() {
     const { children } = this.props;
     return (
@@ -112,12 +221,12 @@ export default class AppleStyleSwipeableRow extends Component<
 const styles = StyleSheet.create({
   leftAction: {
     flex: 1,
-    backgroundColor: '#497AFC',
+    backgroundColor: '#03f87e',
     justifyContent: 'center',
   },
   actionText: {
-    color: 'white',
-    fontSize: 16,
+    color: 'black',
+    fontSize: 40,
     backgroundColor: 'transparent',
     padding: 10,
   },

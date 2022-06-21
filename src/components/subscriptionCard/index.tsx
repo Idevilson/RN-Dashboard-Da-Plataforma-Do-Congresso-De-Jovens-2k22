@@ -11,8 +11,10 @@ import {
  } from 'native-base';
 
 import AppleStyleSwipeableRow from '../swipe/Swipe';
+import { useNavigation } from '@react-navigation/native';
 
- interface subscriptionCardProps{
+interface subscriptionCardProps{
+    onClose: () => void;
     Timestamp: string,
     campo: string,
     cidade: string,
@@ -23,11 +25,10 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
     pago: boolean,
     sexo: string,
     subscriptionCode: string
- }
-
- 
+}
 
  export function SubscriptionCard({
+    onClose,
     Timestamp,
     campo,
     cidade,
@@ -39,10 +40,12 @@ import AppleStyleSwipeableRow from '../swipe/Swipe';
     subscriptionCode
  }: subscriptionCardProps){
 
-
     return(
         <GestureHandlerRootView style={{ marginBottom: 20 }}>
-            <AppleStyleSwipeableRow>
+            <AppleStyleSwipeableRow
+                cpf={cpf}
+                onClose={onClose}
+            >
                 <Box alignItems="center">
                     <Box 
                         maxW="80" 

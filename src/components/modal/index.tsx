@@ -29,7 +29,7 @@ interface SearchResultModalProps{
 }
 
 export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalProps){
-   
+
     console.log("renderizou");
     
     return (
@@ -45,7 +45,7 @@ export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalPr
                     }}
                 >
                     <Modal.Header alignItems="center">
-                      <Text fontSize="2xl" fontWeight="bold">GERENCIAR INSCRIÇÃO</Text>
+                      <Text fontSize="3xl" fontWeight="bold">GERENCIAR INSCRIÇÃO</Text>
                     </Modal.Header>
                     <Modal.Body>
                    
@@ -57,6 +57,7 @@ export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalPr
                             showsHorizontalScrollIndicator
                         >
                             <SubscriptionCard 
+                                    onClose={onClose}
                                     Timestamp={data.Timestamp}
                                     campo={data.campo}
                                     cidade={data.cidade}
@@ -72,7 +73,7 @@ export function SearchResultModal({ isOpen, onClose, data }: SearchResultModalPr
                     </Modal.Body>
                     <Modal.Footer>
                         <Button.Group space={2}>
-                            <Button onPress={onClose}>
+                            <Button  backgroundColor={'red.500'} onPress={onClose}>
                                 FECHAR
                             </Button>
                         </Button.Group>

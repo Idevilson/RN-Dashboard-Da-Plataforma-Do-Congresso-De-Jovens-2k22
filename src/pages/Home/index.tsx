@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { useNetInfo } from '@react-native-community/netinfo';
 
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { validate } from 'gerador-validador-cpf';
 
 import { 
@@ -11,7 +14,6 @@ import {
   Text,
   Select,
   CheckIcon,
-  Divider,
   Spinner
 } from "native-base";
 
@@ -28,12 +30,10 @@ import {
   ScrollContainer
 } from './styles';
 
-import { SearchResultModal } from './components/modal';
-import { SearchBar } from './components/searchBar';
+import { SearchResultModal } from '../../components/modal';
+import { SearchBar } from '../../components/searchBar';
 
-
-
-export function Dashboard(){
+export function Home(){
     const [selected, setSelected] = useState("");
     const [inputValue, setInputValue] = useState("");
     const [dataModal, setDataModal] = useState<any>([]);
@@ -47,9 +47,13 @@ export function Dashboard(){
     const [totalSubscriptionPaid, setTotalSubscriptionPaid] = useState(0);
 
     const [loading, setLoading] = useState(false);
+    const [loadingModal, setLoadingModal] = useState(true);
 
     const { onOpen, onClose, isOpen } = useDisclose();
+    const navigation = useNavigation<any>();
+    const isFocused = useIsFocused();
     const toast = useToast();
+    const netInfo = useNetInfo();
 
      
     function handleSearchSubscription(){  
@@ -102,6 +106,7 @@ export function Dashboard(){
           }
         });
       }else{
+            console.log(dataModal);
             firestore()
             .collection('inscritos2k22')
             .where(selected, '==', inputValue)
@@ -115,9 +120,22 @@ export function Dashboard(){
                 setDataModal(data);
               });
               
-              console.log(data);
-              onOpen();
-                  
+              if(typeof data === "undefined"){
+                Alert.alert(
+                  "Aviso!",
+                  "INSCRIÇÃO NÃO ENCONTRADA :(",
+                  [
+                    {
+                      text: "FECHAR"
+                    }
+                  ]
+                )
+                console.log("É undefined")
+              }else{
+                onOpen();
+              }          
+          }).catch(error => {
+            console.log(error);
           })
       }
     }
@@ -132,10 +150,13 @@ export function Dashboard(){
       .then(
         querySnapshot => {
           setSubscriptionTotal(querySnapshot.size);
-          
+          const data = [];
+
           querySnapshot.forEach(documentSnapshop => {
-            setSubscriptionsContent(documentSnapshop.data());
+            data.push(documentSnapshop.data());
           })
+
+          setSubscriptionsContent(data);
         }
       ).catch(error => console.log(error));
 
@@ -144,12 +165,15 @@ export function Dashboard(){
       .where('pago', '==', true)
       .get()
       .then(querySnapshot => {
+          const data = [];
 
           setTotalSubscriptionPaid(querySnapshot.size);
+
           querySnapshot.forEach(documenSnapshop => {
-            setSubscriptionNotPaidData(documenSnapshop.data());
+            data.push(documenSnapshop.data());
           });
 
+          setSubscriptionPaidData(data);
       });
 
       await firestore()
@@ -157,20 +181,29 @@ export function Dashboard(){
       .where('pago', '==', false)
       .get()
       .then(querySnapshot => {
-
+          const data = [];
           setTotalSubcriptionNotPaid(querySnapshot.size);
+
           querySnapshot.forEach(documenSnapshop => {
-            setSubscriptionPaidData(documenSnapshop.data());
+            console.log("teste",documenSnapshop.data());
           });
-          
+
+          setSubscriptionNotPaidData(data);
       });
 
       setLoading(false);
     }
-    useEffect(() => {
-      LoadSubscriptionsFromFirestore();
-    }, []);
 
+    useEffect(() => {
+      setDataModal([]);
+      setInputValue("");
+      LoadSubscriptionsFromFirestore();
+    }, [isFocused]);
+
+    useEffect(() => {
+      console.log(netInfo.isConnected);
+    }, [netInfo.isConnected]);
+    
     return(
         <Container>
           <Content>
@@ -179,6 +212,7 @@ export function Dashboard(){
             </Title>
   
                 <SearchBar 
+                    value={inputValue}
                     callDatabase={handleSearchSubscription}
                     onChangeText={(text) => (setInputValue(text))}
                 />
@@ -215,7 +249,7 @@ export function Dashboard(){
                 <TitleTotal>
                   Total de inscrições
                 </TitleTotal>
-                <TotalContainer>
+                <TotalContainer onPress={() => navigation.navigate('AllSubscriptions', {data: subscriptionContent})}>
                   <Text fontSize="6xl" color="white">
                       {loading === true ? <Spinner size="lg" color="white"/> :subscriptionTotal}
                   </Text>
@@ -228,7 +262,7 @@ export function Dashboard(){
                 <TitleTotalPaid>
                   Total de inscrições pagas
                 </TitleTotalPaid>
-                <TotalPaidContainer>
+                <TotalPaidContainer onPress={() => navigation.navigate('AllSubscriptionsPaid', {data: subscriptionPaidData})}>
                     <Text fontSize="6xl" color="white">
                         {loading === true ? <Spinner size="lg" color="white"/> : totalSubscriptionPaid}
                     </Text>
@@ -241,14 +275,13 @@ export function Dashboard(){
                 <TitleTotalNotPaid>
                   Total de inscrições não pagas
                 </TitleTotalNotPaid>
-                <TotalNotPaidContainer>
+                <TotalNotPaidContainer onPress={() => navigation.navigate('AllSubscriptionsNotPaid', {data: subscriptionNotPaidData})}>
                     <Text fontSize="6xl" color="white">
                         {loading === true ? <Spinner size="lg" color="white"/> : totalSubscriptionNotPaid}
                     </Text>
                 </TotalNotPaidContainer>
               </Box>
           </ScrollContainer>
-        
         </Container>
     )
 }

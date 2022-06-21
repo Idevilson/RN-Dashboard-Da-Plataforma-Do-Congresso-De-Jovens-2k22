@@ -14,20 +14,22 @@ import {
 interface searchBarProps extends TextInputProps{
     callDatabase: () => void;
 }
-export function SearchBar({ callDatabase, onChangeText }: searchBarProps){
+export function SearchBar({ callDatabase, onChangeText, value }: searchBarProps){
 
     return(
         <Container>
-            <Input 
+            <Input  
+                value={value}            
                 placeholder="PESQUISAR" 
-                width="300px" 
+                width="290px" 
                 maxWidth="300px" 
                 onChangeText={onChangeText}
             />
             <Button 
                 onPress={callDatabase}
                 style={{
-                    width: 40
+                    width: 50,
+                    backgroundColor: '#fce300'
                 }}
             >
                 <Foundation 

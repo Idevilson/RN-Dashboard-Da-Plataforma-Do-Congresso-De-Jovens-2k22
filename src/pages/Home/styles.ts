@@ -26,7 +26,7 @@ export const ChooseButton = styled.View`
     height: 30px;
 `;
 
-export const TotalContainer = styled.View`  
+export const TotalContainer = styled.TouchableOpacity`  
     width: 100px;
     height: 100px;
 
@@ -58,7 +58,7 @@ export const TitleTotalPaid = styled.Text`
     text-align: center;
 `;
 
-export const TotalPaidContainer = styled.View`  
+export const TotalPaidContainer = styled.TouchableOpacity`  
     width: 100px;
     height: 100px;
 
@@ -83,7 +83,7 @@ export const TitleTotalNotPaid = styled.Text`
     text-align: center;
 `;
 
-export const TotalNotPaidContainer = styled.View`  
+export const TotalNotPaidContainer = styled.TouchableOpacity`  
     width: 100px;
     height: 100px;
 
