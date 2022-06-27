@@ -185,7 +185,7 @@ export function Home(){
           setTotalSubcriptionNotPaid(querySnapshot.size);
 
           querySnapshot.forEach(documenSnapshop => {
-            console.log("teste",documenSnapshop.data());
+            data.push(documenSnapshop.data());
           });
 
           setSubscriptionNotPaidData(data);
